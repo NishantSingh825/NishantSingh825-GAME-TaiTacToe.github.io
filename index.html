@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style> 
+    *{
+        margin: 0;
+        padding:0;
+        
+     }
+ 
+     body{
+        background-color :#548687;
+        text-align:center;
+        background-image: url("");
+
+
+    }
+     .container{
+        height:70vh;
+        display:flex;
+         flex-wrap:wrap;
+         justify-content:center;
+         align-items:center;
+         
+    }
+
+
+    .game{
+        height:60vmin; 
+        width: 60vmin;
+        
+         display:flex;
+         flex-wrap:wrap;
+         justify-content:center;
+         align-items:center;
+         gap:1.5vmin;
+         
+    }
+    .box{
+        height: 18vmin;
+        border-radius:1rem;
+        width: 18vmin;
+        border:none;
+        box-shadow: 0 0 1rem  rgba(0, 0, 0, 0.3);
+        font-size:8vmax;
+        color:#ff0000;
+        
+    }
+    #reset-btn{
+        padding:1rem;
+         background-color: rgb(0, 0, 0);
+         color:rgb(255, 255, 255);
+         border:none;
+         box-shadow: 0 0 1rem  rgba(0, 0, 0, 0.3);
+         font-size:1.25rem;
+         border-radius:1rem;
+    }
+    #new-btn{
+        padding:1rem;
+         background-color: rgb(0, 0, 0);
+         color:rgb(255, 255, 255);
+         border:none;
+         box-shadow: 0 0 1rem  rgba(0, 0, 0, 0.3);
+         font-size:1.25rem;
+         border-radius:1rem;
+    }
+    #msg{
+        font-size: 8vmin;
+        color: rgb(255, 255, 255);
+    }
+
+    .msg-container{
+        height:100vmin;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 4rem;
+         
+    }
+    .hide{
+       display:none;
+    }
+    </style>
+</head>
+<body>
+    <div class="msg-container hide"> 
+        <p id="msg">You won!</p>
+     <button id="new-btn"> New Game</button>       
+    </div>
+    <main style="margin-top: 50px;">
+        <h1>Welcome to Tai Tac Toe </h1>
+        <h3 style="color: #ffffff; font-size: 20px; font-weight:100;"><i>This mini GAME made by </i><b> Nishant Singh</b></h3>
+        <div  class="container">
+        <div class="game">
+                <button class="box"> </button>
+                <button class="box"> </button>
+                <button class="box"> </button>
+                <button class="box"></button>
+                <button class="box"> </button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"> </button>
+                <button class="box"> </button>
+         </div>
+        </div>
+        <button id="reset-btn" > Reset Game</button>
+    </main>
+    <script>
+        let boxes=document.querySelectorAll(".box");
+        let resetbtn=document.querySelector("#reset-btn");
+        let  newGameBtn = document.querySelector('#new-btn');
+        let  msgContainer=document.querySelector('.msg-container')
+        let   msg=document.querySelector('#msg')
+        let count=0;
+        //Player X turn by default
+        let turnO = true;
+        const winpattens= [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ];
+
+            boxes.forEach((box)=> {
+                box.addEventListener("click", ()=> {
+                //console.log("butten was click");
+                if(turnO){
+                    box.innerText="X";
+                    box.style.color="blue";
+                    turnO=false;
+                }else{
+                    box.innerText="O";
+                    box.style.color="red";
+                    turnO=true;
+                }
+                box.disabled=true;
+                count++;
+                checkwinner();
+          });
+           });
+
+           const resetgame=()=>{
+                turnO=true;
+                enablebox();
+                msgContainer.classList.add("hide");
+                count=0;
+           };
+
+           let countt=()=>{
+                 msgContainer.classList.remove("hide");
+                 console.log("no one wins yet");
+                 msg.innerText= "No One Wins Yet! Game Draw" ;
+                 count=0;
+           };
+           const enablebox=()=>{
+                for(let box of boxes){
+                    box.disabled= false;
+                    box.innerText="";
+                }
+            };
+
+           const disablebox=()=>{
+                for(let box of boxes){
+                    box.disabled= true;
+                }
+            };
+
+           const showWinner=(winner)=>{
+                msg.innerText=`🎊🥳Congratulations✨ ${winner}🎉 is Winner🎊` ;
+                msgContainer.classList.remove('hide');
+                disablebox();
+           }
+
+          const checkwinner = ()=>{
+            for(let pattern of winpattens){
+               // console.log(pattern[0],pattern[1],pattern[2]);
+                 //console.log(boxes[pattern[0]].innerText,boxes[pattern[1]].innerText,boxes[pattern[2]].innerText);
+            
+                let pos1val = boxes[pattern[0]].innerText;
+                let pos2val = boxes[pattern[1]].innerText;
+                let pos3val = boxes[pattern [2]].innerText;  
+               if(pos1val!="" && pos2val !=""  && pos3val!=="") {
+
+                if(pos1val === pos2val && pos2val === pos3val){
+                   // console.log("you won!",pos1val);
+                    showWinner(pos1val);
+                     
+                }else{
+                    if(count==9){
+                    // console.log("no one wins yet");
+                    // msg.innerText= "No One Wins Yet! Game Draw" ;
+                    // msg.classList.remove("hide");
+                     countt();
+                    }
+                    }
+                    
+                
+               }
+            }
+             }
+            
+           newGameBtn.addEventListener( 'click', resetgame);
+            resetbtn.addEventListener( 'click', resetgame);
+             </script>
+
+</body>
+</html>
+ 
